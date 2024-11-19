@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.form-box .ant-form-item-label > label, .form-box .ant-form-item-explain{
+    font-size: 12px;
+}
+.form-box .ant-input-prefix {
+    margin-inline-end: 10px;
+    color: #b9bec7;
+}
+.form-box .ant-form-item-explain{
+    margin-bottom: 10px;
+}
