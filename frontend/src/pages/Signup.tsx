@@ -3,16 +3,21 @@ import { LockOutlined, UserOutlined, MailOutlined } from "@ant-design/icons";
 import GoogleSignIn from "../components/GoogleLogin";
 import { useCreateUserMutation } from "../services/api";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const [form] = Form.useForm();
   const [createUser, { isLoading }] = useCreateUserMutation();
+  const navigate = useNavigate()
 
   const onSubmit = async (values: any) => {
    try {
-     await createUser(values).unwrap()
+     const response:any = await createUser(values)
+     if(response?.error){
+      return toast.error(response?.error?.data?.error || 'Failed to create user');
+     }
      toast.success('User created successfully!')
-     form.resetFields()
+     navigate('/login')
    } catch (error) {
      toast.error('Failed to create user');
     }
@@ -73,7 +78,7 @@ const Signup = () => {
                 },
               ]}
             >
-              <Input
+              <Input.Password
                 prefix={<LockOutlined />}
                 placeholder="Minimum 8 characters"
                 className="py-2 text-sm"
@@ -86,7 +91,7 @@ const Signup = () => {
                 size="large"
                 className="shadow-xl text-sm font-semibold w-full py-6"
               >
-               {isLoading ? <Spin/>: 'Play with ClickUp'} 
+               {isLoading ? <Spin className="*:!text-[#fff]"/> : 'Play with ClickUp'} 
               </Button>
             </Form.Item>
           </Form>

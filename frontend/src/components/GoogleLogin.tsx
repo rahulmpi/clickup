@@ -1,30 +1,23 @@
 import { GoogleLogin } from "@react-oauth/google";
 import { toast } from "react-toastify";
+import { useGoogleLoginMutation } from "../services/api";
+import { useNavigate } from "react-router-dom";
 
 const GoogleSignIn = () => {
+  const [googleLogin] = useGoogleLoginMutation();
+  const navigate = useNavigate();
+
   const responseGoogle = async (response: any) => {
     const { credential } = response;
-
     try {
-      const result = await fetch("http://localhost:3001/auth/google", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          idToken: credential,
-        }),
-      });
-
-      if (!result.ok) {
-        toast("Login failed");
-      }
-
-      const data = await result.json();
-      const { token } = data;
-      console.log("Login successful, JWT:", token);
+      const response = await googleLogin({ idToken: credential });
+      if(response?.error){
+        return toast.error('Failed to login');
+       }
+      toast.success("Login successful");
+      navigate("/dashboard");
     } catch (error) {
-      console.error("Login failed:", error);
+      toast.error("Login failed");
     }
   };
 

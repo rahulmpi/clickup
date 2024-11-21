@@ -79,6 +79,15 @@ const userSchema = new mongoose.Schema<UserDocument>({
     timestamps: true
 })
 
+userSchema.methods.toJSON = function () {
+    const user = this
+    const userObject = user.toObject()
+    delete userObject?.tokenExpiry
+    delete userObject?.password
+
+    return userObject
+}
+
 userSchema.methods.generateAuthToken = async function(): Promise<any>{
     const user = this
     const token = jwt.sign({id: user._id.toString()}, process.env.JWT_SECRET as string, { expiresIn: '1h' })

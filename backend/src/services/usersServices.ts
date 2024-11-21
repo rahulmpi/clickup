@@ -15,7 +15,7 @@ export const saveNewUser = async (userData: any) =>{
 
 export const createToken = async(user:any) =>{
     user.token = jwt.sign({ id: user._id }, process.env.JWT_SECRET as string, { expiresIn: '1h' });
-    user.tokenExpiry = Date.now() + 60000;
+    user.tokenExpiry = Date.now() + 900000;
     await user.save();
     return user
 }

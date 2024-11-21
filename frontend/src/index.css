@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+    overflow-x: hidden;
+}
+
 .form-box .ant-form-item-label > label, .form-box .ant-form-item-explain{
     font-size: 12px;
 }
@@ -11,4 +15,26 @@
 }
 .form-box .ant-form-item-explain{
     margin-bottom: 10px;
+}
+.minimal{
+    overflow-x: hidden;
+}
+.minimal .form-box > div{
+    z-index: 11;
+}
+.minimal .form-box:after, .minimal .form-box:before {
+    content: "";
+    position: absolute;
+    height: calc(100% - 50vh);
+    width: 100%;
+    top: 50vh;
+    left: 0;
+    background: linear-gradient(45deg, #7e3afb, #ff9d34);
+    clip-path: polygon(91% 0%, 100% 0%, 100% 60%, 100% 100%, 0% 100%, 0% 60%, 0% 35%);
+    -webkit-clip-path: polygon(91% 0%, 100% 0%, 100% 60%, 100% 100%, 0% 100%, 0% 60%, 0% 35%);
+    border-top-right-radius: 160px;
+}
+.minimal .form-box:before{
+    background: url('../public/images/bg-dots.svg');
+    z-index: 1;
 }

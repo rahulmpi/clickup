@@ -46,6 +46,9 @@ export const userLogin = async (req: customRequest, res: Response): Promise<any>
 
 export const userGoogleLogin = async (req: customRequest, res: Response): Promise<any> => {
     const { idToken } = req.body;
+    if (!idToken) {
+        return res.status(400).json({ error: 'ID Token is required' });
+      }
     try {
         const response = await axios.get(`https://oauth2.googleapis.com/tokeninfo?id_token=${idToken}`);
         console.log(response.data)
@@ -53,7 +56,7 @@ export const userGoogleLogin = async (req: customRequest, res: Response): Promis
         return res.status(200).json({ user });
     } catch (error) {
         console.error('Google login error:', error);
-        return res.status(400).send('Something went wrong');
+        return res.status(400).json({ error: 'Something went wrong'});
     }
 };
 
@@ -64,7 +67,7 @@ export const userLogout = async (req: customRequest, res: Response): Promise<any
         return res.status(200).json({message: 'Logout Successfully'})
     } catch (error) {
         console.error('Logout error:', error);
-        return res.status(500).send('Something went wrong');
+        return res.status(500).json({ error: 'Something went wrong'});
     }
 };
 
@@ -78,19 +81,19 @@ export const forgotPassword = async (req:customRequest, res: Response): Promise<
       user = await createToken(user)
 
       if(user){
-        const resetUrl = `http://localhost:3000/reset-password/${user.token}`
-        console.log(user.token)
+        const resetUrl = `${process.env.REACT_APP_URL}/reset-password/${user.token}`
         await sendEmail(user.email, `Click here to reset your password: <a href="${resetUrl}">Reset Password</a>`, 'Password Reset').catch(console.error)
-        return res.status(200).send('Password reset email sent')
+        return res.status(200).json({ message: 'Password reset email sent'})
       }
     } catch (error) {
         console.error('Forgot password error:', error);
-         return res.status(500).send('Something went wrong');
+         return res.status(500).json({ error: 'Something went wrong'});
     }
 }
 
 export const resetPassword = async (req:customRequest, res: Response): Promise<any> =>{
     const {token} = req.params
+    console.log(token)
     const { newPassword } = req.body;
     try {
         const user = await findUserByToken(token)
@@ -103,9 +106,9 @@ export const resetPassword = async (req:customRequest, res: Response): Promise<a
         user.token = '';
         user.tokenExpiry = '';
         await user.save()
-        return res.status(200).send('Password has been reset');
+        return res.status(200).json({message: 'Password has been reset'});
     } catch (error) {
         console.error('Reset password error:', error);
-        return res.status(500).send('Something went wrong');
+        return res.status(500).json({ error: 'Something went wrong'});
     }
 }

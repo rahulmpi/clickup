@@ -1,20 +1,26 @@
 import { Button, Form, Input, Divider, Spin } from "antd";
-import { LockOutlined, UserOutlined, MailOutlined } from "@ant-design/icons";
+import { LockOutlined,  MailOutlined } from "@ant-design/icons";
 import GoogleSignIn from "../components/GoogleLogin";
 import { useLoginUserMutation } from "../services/api";
 import { toast } from "react-toastify";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [form] = Form.useForm();
+  const navigate = useNavigate()
   const [loginUser, {isLoading}] = useLoginUserMutation()
 
   const onSubmit = async (values: any) => {
     try {
-     await loginUser(values)
+     const response:any = await loginUser(values)
+     if(response?.error){
+      return toast.error(response?.error?.data?.error || 'Failed to login');
+     }
      toast.success('User login successfully!')
      form.resetFields()
+     navigate('/dashboard')
     } catch (error) {
-      toast.error('Failed to login user');
+      toast.error('Failed to login');
     }
   };
 
@@ -60,12 +66,15 @@ const Login = () => {
                 },
               ]}
             >
-              <Input
+              <Input.Password
                 prefix={<LockOutlined />}
                 placeholder="Minimum 8 characters"
                 className="py-2 text-sm"
               />
             </Form.Item>
+            <div className="text-right -mt-3">
+              <Link to="/forgot-password" className="text-sm text-[#5f55ee]">Forgot Password?</Link>
+            </div>
             <Form.Item className="mt-8">
               <Button
                 type="primary"
@@ -73,7 +82,7 @@ const Login = () => {
                 size="large"
                 className="shadow-xl text-sm font-semibold w-full py-6"
               >
-                {isLoading ? <Spin/>: 'Log In'}
+                {isLoading ? <Spin className="*:!text-[#fff]"/> : 'Log In'}
               </Button>
             </Form.Item>
           </Form>

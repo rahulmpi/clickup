@@ -1,9 +1,17 @@
-import React from 'react'
+import { Navigate, Outlet } from "react-router-dom";
 
 const DashboardLayout = () => {
-  return (
-    <div>DashboardLayout</div>
-  )
-}
+  const token = localStorage.getItem("token");
+  const isAuthenticated = token ? JSON.parse(token) : null;
 
-export default DashboardLayout
+  if (!isAuthenticated) {
+    return <Navigate to="/login" />;
+  }
+  return (
+    <>
+      <Outlet />
+    </>
+  );
+};
+
+export default DashboardLayout;

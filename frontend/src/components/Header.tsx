@@ -5,9 +5,9 @@ const Header = () => {
   const location = useLocation();
 
   return (
-    <nav className="flex justify-between p-5 items-center">
+    <nav className="flex justify-between p-5 items-center md:fixed relative w-full">
       <Link to="/login">
-        <img src="images/logo.svg" className="w-[124px]" />
+        <img src="/images/logo.svg" className="w-[124px]" />
         <p>
           <small>The everything app for work.</small>
         </p>
